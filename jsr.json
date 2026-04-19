@@ -1,0 +1,11 @@
+{
+    "name": "@dylmye/atproto-standard-site-astro-loader",
+    "version": "0.0.1",
+    "license": "ISC",
+    "exports": "./dist/index.ts",
+    "publish": {
+        "exclude": [
+            "!dist"
+        ]
+    }
+}

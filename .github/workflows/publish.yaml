@@ -1,0 +1,80 @@
+name: Publish Package
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+  packages: write
+  id-token: write
+
+jobs:
+  publish-npm:
+    name: Publish to NPM registry
+    runs-on: ubuntu-slim
+    steps:
+      - uses: actions/checkout@v6
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v5
+
+      - run: pnpm install
+
+      - run: pnpm run check
+
+      - run: pnpm run test
+
+      - run: pnpm run build
+
+      - name: Verify package.json version matches tag
+        run: |
+          PKG_VERSION="v$(jq -r .version package.json)"
+          if [ "$PKG_VERSION" != "$GITHUB_REF_NAME" ]; then
+            echo "::error::package.json version ($PKG_VERSION) does not match tag ($GITHUB_REF_NAME)"
+            exit 1
+          fi
+
+      - name: Publish to NPM registry
+        run: pnpm publish --access public --provenance
+
+  publish-jsr:
+    name: Publish to JSR registry
+    runs-on: ubuntu-slim
+    steps:
+    - uses: actions/checkout@v6
+
+    - name: Install pnpm
+      uses: pnpm/action-setup@v5
+
+    - run: pnpm install
+
+    - run: pnpm run check
+
+    - run: pnpm run test
+
+    - run: pnpm run build
+
+    - name: Verify jsr.json version matches tag
+      run: |
+        PKG_VERSION="v$(jq -r .version jsr.json)"
+        if [ "$PKG_VERSION" != "$GITHUB_REF_NAME" ]; then
+          echo "::error::jsr.json version ($PKG_VERSION) does not match tag ($GITHUB_REF_NAME)"
+          exit 1
+        fi
+    
+    - name: Publish to JSR registry
+      run: pnpm dlx jsr publish
+
+  release:
+    name: Add release to repo
+    needs:
+      - publish-npm
+      - publish-jsr
+    runs-on: ubuntu-slim
+    steps:
+      - name: Create GitHub Release
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --generate-notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
