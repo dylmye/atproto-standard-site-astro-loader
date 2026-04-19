@@ -16,6 +16,8 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref }} # pnpm publish requires the correct branch
 
       - name: Install pnpm
         uses: pnpm/action-setup@v5

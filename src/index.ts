@@ -1,3 +1,5 @@
+/* @ts-self-types="./index.d.ts" */
+
 import { Client, ok, simpleFetchHandler } from "@atcute/client";
 import { safeParse } from "@atcute/lexicons";
 import {
