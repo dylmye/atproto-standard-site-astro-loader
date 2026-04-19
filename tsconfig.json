@@ -11,6 +11,7 @@
 
     // Other Outputs
     "sourceMap": true,
+    "sourceRoot": "./",
     "declaration": true,
     "declarationMap": true,
 

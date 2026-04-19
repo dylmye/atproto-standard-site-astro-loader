@@ -5,7 +5,8 @@
     "exports": "./dist/index.js",
     "publish": {
         "include": [
-            "dist"
+            "dist",
+            "README.md"
         ]
     }
 }

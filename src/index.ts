@@ -15,7 +15,7 @@ const loaderOptionsSchema = z.object({
 		message:
 			"Must be a valid DID. If you provided a username, find your DID here: https://ilo.so/bluesky-did",
 	}),
-	serviceBaseUrl: z.url().default("https://public.api.bsky.app"),
+	serviceBaseUrl: z.url().default("https://bsky.social"),
 	limit: z
 		.number({
 			message:
@@ -27,6 +27,7 @@ const loaderOptionsSchema = z.object({
 	fetchAll: z.boolean().default(false),
 });
 
+/** Configuration options for the loader */
 export type StandardSiteLoaderOptions = z.infer<typeof loaderOptionsSchema>;
 
 const documentSchema = z.custom<Main>(
@@ -61,6 +62,11 @@ async function* listAllRecords(
 	} while (fetchAll && cursor);
 }
 
+/**
+ * Loads `site.standard.document` records from your Atproto PDS
+ *
+ * (in human English: provides all of your posts in their raw format)
+ */
 const standardSiteLoader = (
 	options: Partial<StandardSiteLoaderOptions>,
 ): Loader => ({
