@@ -1,4 +1,4 @@
-/* @ts-self-types="./index.d.ts" */
+/* @ts-self-types="./dist/index.d.ts" */
 
 import { Client, ok, simpleFetchHandler } from "@atcute/client";
 import { safeParse } from "@atcute/lexicons";

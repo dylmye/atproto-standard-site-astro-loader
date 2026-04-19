@@ -16,8 +16,6 @@ jobs:
     runs-on: ubuntu-slim
     steps:
       - uses: actions/checkout@v6
-        with:
-          ref: ${{ github.ref }} # pnpm publish requires the correct branch
 
       - name: Install pnpm
         uses: pnpm/action-setup@v5
@@ -39,7 +37,8 @@ jobs:
           fi
 
       - name: Publish to NPM registry
-        run: pnpm publish --access public --provenance
+        # no-git-checks enabled as the ref is the tag this is triggered by
+        run: pnpm publish --access public --provenance --no-git-checks
 
   publish-jsr:
     name: Publish to JSR registry
