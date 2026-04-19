@@ -1,8 +1,8 @@
 {
     "name": "@dylmye/atproto-standard-site-astro-loader",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "license": "ISC",
-    "exports": "./src/index.ts",
+    "exports": "./dist/index.js",
     "publish": {
         "include": [
             "dist"
