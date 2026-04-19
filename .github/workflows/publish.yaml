@@ -17,6 +17,11 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
+      - uses: actions/setup-node@v6
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+
       - name: Install pnpm
         uses: pnpm/action-setup@v5
 
@@ -39,6 +44,8 @@ jobs:
       - name: Publish to NPM registry
         # no-git-checks enabled as the ref is the tag this is triggered by
         run: pnpm publish --access public --provenance --no-git-checks
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   publish-jsr:
     name: Publish to JSR registry
@@ -70,9 +77,7 @@ jobs:
 
   release:
     name: Add release to repo
-    needs:
-      - publish-npm
-      - publish-jsr
+    needs: publish-npm
     runs-on: ubuntu-slim
     steps:
       - name: Create GitHub Release
